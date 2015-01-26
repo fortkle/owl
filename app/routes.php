@@ -40,6 +40,7 @@ Route::group(array('before' => 'sentry'), function() {
     Route::put('items/{items}', array('as' => 'items.update', 'uses' => 'ItemController@update'));
     Route::delete('items/{items}', array('as' => 'items.destroy', 'uses' => 'ItemController@destroy'));
     Route::resource('templates', 'TemplateController');
+    Route::resource('stocks/search', 'StockController@search');
     Route::resource('stocks', 'StockController');
     Route::resource('likes', 'LikeController');
 
