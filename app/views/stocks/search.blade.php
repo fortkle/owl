@@ -13,10 +13,10 @@
 @stop
 
 @section('contents-main')
-<div class="page-header stock-search">
+<div class="page-header stock-search" >
     <h5>最近のストック</h5>
     <div class="form-group">
-        <form class="navbar-form navbar-left" role="search" method="GET" action="/stocks/search">
+        <form class="navbar-form navbar-left"role="search" method="GET" action="/stocks/search">
             <input name="q" value="{{isset($q)? $q : ''}}" type="text" class="form-control" placeholder="Search">
             <button type="submit" class="btn btn-default">検索</button>
         </form>
@@ -24,7 +24,6 @@
     <br clear='both' />
 </div>
 <div class="stocks">
-    
     @foreach ($stocks as $stock)
     <div class="stock">
         {{ HTML::gravator($stock->email, 40) }}
@@ -32,7 +31,7 @@
         <p><a href="{{ action('ItemController@show', $stock->open_item_id) }}"><strong>{{{ $stock->title }}}</strong></a></p>
     </div>
     @endforeach
-    <?php echo $stocks->links(); ?>
+    <?php echo $pagination->appends(array('q' => $q))->links(); ?>
 </div>
 @stop
 

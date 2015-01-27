@@ -2,6 +2,7 @@
 
 class StockController extends BaseController {
 
+    private $_perPage = 10;
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -46,4 +47,26 @@ class StockController extends BaseController {
 
 		Stock::whereRaw('user_id = ? and item_id = ?', array($user->id, $item->id))->delete();
         }
+
+    /**
+     * Search Stock 
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function search()
+    {
+        $q = Input::get('q');
+        $user = Sentry::getUser();
+        $params = array('user_id' => $user->id, 'match' => FtsUtils::createMatchWord($q));
+
+        $offset = $this->calcOffset(Input::get('page'), $this->_perPage);
+        $stocks = ItemFts::match($params, $this->_perPage, $offset );
+        if(count($stocks) > 0){
+            $res = ItemFts::matchCount($params);
+            $pagination = Paginator::make($stocks, $res[0]->count, $this->_perPage);
+        }
+		$templates = Template::all();
+		return View::make('stocks.search', compact('stocks', 'templates', 'q', 'pagination'));
+    }
 }

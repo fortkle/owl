@@ -5,7 +5,12 @@ class ItemFts extends Eloquent{
 
     public $timestamps = false;
 
-    public static function match($str, $limit=10, $offset=0) {
+    private static function stockSrchQuery(){
+        return 'INNER JOIN stocks st ON it.id = st.item_id AND st.user_id= :user_id ';
+    }
+
+    public static function match($vals, $limit=10, $offset=0) {
+        $stock_srch = isset($vals['user_id']) ? self::stockSrchQuery() : "";
         $query = <<<__SQL__
             SELECT
               it.title,
@@ -17,6 +22,7 @@ class ItemFts extends Eloquent{
               items_fts fts 
             INNER JOIN
               items it ON it.id = fts.item_id AND it.published = 2
+            $stock_srch 
             INNER JOIN
               users us ON it.user_id = us.id
             WHERE
@@ -28,10 +34,11 @@ class ItemFts extends Eloquent{
             OFFSET
               $offset 
 __SQL__;
-        return DB::select( DB::raw($query), array( 'match' => FtsUtils::createMatchWord($str) ));
+        return DB::select( DB::raw($query), $vals);
     }
 
-    public static function matchCount($str){
+    public static function matchCount($vals){
+        $stock_srch = isset($vals['user_id']) ? self::stockSrchQuery() : "";
         $query = <<<__SQL__
             SELECT
               COUNT(*) as count
@@ -39,10 +46,11 @@ __SQL__;
               items_fts fts 
             INNER JOIN
               items it ON it.id = fts.item_id AND it.published = 2
+            $stock_srch 
             WHERE
               fts.words MATCH :match
 __SQL__;
-        return DB::select( DB::raw($query), array( 'match' => FtsUtils::createMatchWord($str) ));
+        return DB::select( DB::raw($query),  $vals);
     }
 
 }

@@ -6,10 +6,12 @@ class SearchController extends BaseController{
 
     public function index(){
         $q = Input::get('q');
-        $offset = $this->calcOffset(Input::get('page'));
-        $results = ItemFts::match($q, $this->_perPage, $offset);
+        $params = array('match' => FtsUtils::createMatchWord($q));
+
+        $offset = $this->calcOffset(Input::get('page'), $this->_perPage);
+        $results = ItemFts::match($params, $this->_perPage, $offset);
         if(count($results) > 0){
-            $res = ItemFts::matchCount($q);
+            $res = ItemFts::matchCount($params);
             $pagination = Paginator::make($results, $res[0]->count, $this->_perPage);
         }
         $users = User::where('username', 'like', "$q%")->get();
@@ -52,9 +54,4 @@ class SearchController extends BaseController{
         return $json;
     }
 
-    private function calcOffset($page){
-        if(empty($page))
-            return 0;
-        return (intval($page)-1) * $this->_perPage;
-    }
 }

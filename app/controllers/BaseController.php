@@ -29,4 +29,12 @@ class BaseController extends Controller {
 		}
 	}
 
+    /**
+     * Calculate offset from page
+     */
+    protected function calcOffset($page, $perPage){
+        if(empty($page))
+            return 0;
+        return (intval($page)-1) * $perPage;
+    }
 }

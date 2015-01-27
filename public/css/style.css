@@ -480,3 +480,32 @@ div.comment .arrow_box:before {
     border-width: 7px;
     margin-left: -7px;
 }
+
+/* stock search */
+
+div.stock-search{
+    margin-top:8px;
+}
+
+div.stock-search h5 {
+   display:inline;
+   vertical-align:middle;
+}
+
+div.stock-search div.form-group{
+   float:right;
+}
+
+div.stock-search form{
+    display:inline;
+    margin-top:0;
+    padding-top:0;
+}
+
+div.stock-search form input{
+    display:inline;
+}
+
+div.stock-search form button{
+    display:inline;
+}
