@@ -1,8 +1,8 @@
 <?php namespace Owl\Http\Controllers;
 
-use Owl\Repositories\Tag;
-use Owl\Repositories\Item;
-use Owl\Repositories\Stock;
+use Owl\Repositories\Models\Tag;
+use Owl\Repositories\Models\Item;
+use Owl\Repositories\Models\Stock;
 use Owl\Services\TagService;
 use Owl\Services\UserService;
 

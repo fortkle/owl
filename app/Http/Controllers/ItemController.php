@@ -1,12 +1,12 @@
 <?php namespace Owl\Http\Controllers;
 
 use Owl\Services\UserService;
-use Owl\Repositories\Item;
-use Owl\Repositories\ItemHistory;
-use Owl\Repositories\Template;
-use Owl\Repositories\Tag;
-use Owl\Repositories\Stock;
-use Owl\Repositories\Like;
+use Owl\Repositories\Models\Item;
+use Owl\Repositories\Models\ItemHistory;
+use Owl\Repositories\Models\Template;
+use Owl\Repositories\Models\Tag;
+use Owl\Repositories\Models\Stock;
+use Owl\Repositories\Models\Like;
 
 class ItemController extends Controller {
 

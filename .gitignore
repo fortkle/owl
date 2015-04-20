@@ -6,3 +6,6 @@
 
 # test
 .bundle/
+
+*.swp
+.idea

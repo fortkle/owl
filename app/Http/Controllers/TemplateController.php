@@ -1,6 +1,6 @@
 <?php namespace Owl\Http\Controllers;
 
-use Owl\Repositories\Template;
+use Owl\Repositories\Models\Template;
 
 class TemplateController extends Controller {
 
