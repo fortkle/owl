@@ -1,8 +1,8 @@
 <?php namespace Owl\Http\Controllers;
 
-use Owl\Repositories\User;
-use Owl\Repositories\Item;
-use Owl\Repositories\Template;
+use Owl\Repositories\Models\User;
+use Owl\Repositories\Models\Item;
+use Owl\Repositories\Models\Template;
 use Owl\Services\UserService;
 use Owl\Services\AuthService;
 use Owl\Http\Requests\UserRegisterRequest;

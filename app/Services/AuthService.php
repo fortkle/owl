@@ -1,7 +1,7 @@
 <?php namespace Owl\Services;
 
-use Owl\Repositories\User;
-use Owl\Repositories\LoginToken;
+use Owl\Repositories\Models\User;
+use Owl\Repositories\Models\LoginToken;
 use Carbon\Carbon;
 
 class AuthService extends Service

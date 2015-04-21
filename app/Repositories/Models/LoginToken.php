@@ -1,4 +1,4 @@
-<?php namespace Owl\Repositories;
+<?php namespace Owl\Repositories\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\UserInterface;

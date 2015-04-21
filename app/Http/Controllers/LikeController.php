@@ -1,7 +1,7 @@
 <?php namespace Owl\Http\Controllers;
 
-use Owl\Repositories\Like;
-use Owl\Repositories\Item;
+use Owl\Repositories\Models\Like;
+use Owl\Repositories\Models\Item;
 
 class LikeController extends Controller
 {

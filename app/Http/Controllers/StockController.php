@@ -1,8 +1,8 @@
 <?php namespace Owl\Http\Controllers;
 
-use Owl\Repositories\Stock;
-use Owl\Repositories\Item;
-use Owl\Repositories\Template;
+use Owl\Repositories\Models\Stock;
+use Owl\Repositories\Models\Item;
+use Owl\Repositories\Models\Template;
 
 class StockController extends Controller
 {

@@ -1,6 +1,6 @@
 <?php namespace Owl\Services;
 
-use Owl\Repositories\User;
+use Owl\Repositories\Models\User;
 
 class UserService extends Service
 {

@@ -1,10 +1,10 @@
 <?php namespace Owl\Http\Controllers;
 
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
-use Owl\Repositories\ItemFts;
-use Owl\Repositories\TagFts;
-use Owl\Repositories\User;
-use Owl\Repositories\Template;
+use Owl\Repositories\Models\ItemFts;
+use Owl\Repositories\Models\TagFts;
+use Owl\Repositories\Models\User;
+use Owl\Repositories\Models\Template;
 
 class SearchController extends Controller {
 

@@ -1,4 +1,4 @@
-<?php namespace Owl\Repositories;
+<?php namespace Owl\Repositories\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Owl\Libraries\FtsUtils;
@@ -7,7 +7,7 @@ class Tag extends Model {
     protected $guarded = array();
 
     public function item() {
-        return $this->belongsToMany('Owl\Repositories\Item');
+        return $this->belongsToMany('Owl\Repositories\Models\Item');
     }
 
     public function getAllTags()
