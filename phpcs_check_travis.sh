@@ -1,30 +1,50 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-echo "phpcsによるチェックを開始します..."
-# チェック対象のファイルがあるかチェック（ない場合は次のphpcsでエラーが出ないようにexitする）
-FILES=$(git diff --name-only --diff-filter=ACMR origin/master...HEAD | grep ".php")
-if [ -z "${FILES}" ]; then
-    echo "------------------------------------------"
-    git diff --name-only --diff-filter=ACMR origin/master...HEAD
-    echo "------------------------------------------"
-    echo "チェック対象のファイルがありませんでした。"
-    exit 0
-fi
+set -eu
 
-echo "phpcsによるチェックを実行します..."
-# phpcsを実行する
-RESULT=$(git diff --name-only --diff-filter=ACMR origin/master...HEAD | grep ".php" | xargs vendor/bin/phpcs --standard=./phpcs.xml --report=checkstyle --report-file=phpcs.result.xml)
-if [ $? -eq 0 ]; then
-    echo "------------------------------------------"
-    git diff --name-only --diff-filter=ACMR origin/master...HEAD
-    echo "------------------------------------------"
-    echo "規約違反は発見されませんでした。"
-    exit 0
+echo "********************"
+echo "* install gems     *"
+echo "********************"
+gem install --no-document checkstyle_filter-git saddler saddler-reporter-github
+
+echo "********************"
+echo "* exec check       *"
+echo "********************"
+set +e
+git diff --name-only --diff-filter=ACMR origin/master...HEAD | grep ".php" | xargs vendor/bin/phpcs --standard=./phpcs.xml --report=checkstyle --report-file=phpcs.result.xml
+set -e
+
+echo "********************"
+echo "* save outputs     *"
+echo "********************"
+
+LINT_RESULT_DIR="$CIRCLE_ARTIFACTS/lint"
+
+cat phpcs.result.xml
+echo "ほげ"
+
+echo "********************"
+echo "* select reporter  *"
+echo "********************"
+
+if [ -z "${TRAVIS_PULL_REQUEST}" ]; then
+    # when not pull request
+    REPORTER=Saddler::Reporter::Github::CommitReviewComment
 else
-    echo "規約違反が発見されたました。Githubを確認してください。"
-    cat phpcs.result.xml \
-        | saddler report --require saddler/reporter/github --reporter Saddler::Reporter::Github::PullRequestReviewComment
-    exit 1
+    REPORTER=Saddler::Reporter::Github::PullRequestReviewComment
 fi
 
-echo "phpcsによるチェックを終了します。"
+echo "********************"
+echo "* checkstyle       *"
+echo "********************"
+cat phpcs.result.xml \
+    | checkstyle_filter-git diff origin/master \
+    | saddler report --require saddler/reporter/github --reporter $REPORTER
+
+echo "********************"
+echo "* PMD              *"
+echo "********************"
+cat phpmd.result.xml \
+    | pmd_translate_checkstyle_format translate \
+    | checkstyle_filter-git diff origin/master \
+    | saddler report --require saddler/reporter/github --reporter $REPORTER
