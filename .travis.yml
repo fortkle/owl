@@ -6,12 +6,11 @@ php:
 sudo: false
 install:
 - gem install saddler saddler-reporter-github
-- gem install rails
 before_script:
 - git fetch --unshallow
 - git fetch origin master:refs/remotes/origin/master
 - sh ./setup_app.sh
-- vendor/bin/behat --colors
+#- vendor/bin/behat --colors
 - ./phpcs_check_travis.sh
 env:
   global:
