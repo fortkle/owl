@@ -5,7 +5,7 @@ php:
 - 5.6
 sudo: false
 install:
-- gem install saddler saddler-reporter-github
+- gem install saddler saddler-reporter-github checkstyle_filter-git
 before_script:
 - git fetch --unshallow
 - git fetch origin master:refs/remotes/origin/master
