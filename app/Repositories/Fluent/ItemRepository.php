@@ -1,9 +1,12 @@
 <?php namespace Owl\Repositories\Fluent;
 
+
+
 use Owl\Repositories\ItemRepositoryInterface;
 
 class ItemRepository extends AbstractFluent implements ItemRepositoryInterface
 {
+
     protected $table = 'items';
 
     /**

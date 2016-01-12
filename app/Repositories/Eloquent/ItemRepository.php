@@ -1,10 +1,13 @@
 <?php namespace Owl\Repositories\Eloquent;
 
+
+
 use Owl\Repositories\ItemRepositoryInterface;
 use Owl\Repositories\Eloquent\Models\Item;
 
 class ItemRepository implements ItemRepositoryInterface
 {
+
     protected $item;
 
     public function __construct(Item $item)

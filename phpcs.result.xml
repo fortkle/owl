@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="2.5.0">
+<file name="/Users/fortkle/Private/owl/app/Repositories/Eloquent/ItemRepository.php">
+ <error line="1" column="7" severity="error" message="There must be one blank line after the namespace declaration" source="PSR2.Namespaces.NamespaceDeclaration.BlankLineAfter"/>
+</file>
+<file name="/Users/fortkle/Private/owl/app/Repositories/Fluent/ItemRepository.php">
+ <error line="1" column="7" severity="error" message="There must be one blank line after the namespace declaration" source="PSR2.Namespaces.NamespaceDeclaration.BlankLineAfter"/>
+</file>
+</checkstyle>
+

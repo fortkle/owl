@@ -1,20 +1,17 @@
 language: php
-
 php:
-  - 5.4
-  - 5.5
-  - 5.6
-
-sudo:
-  false
-
+- 5.4
+- 5.5
+- 5.6
+sudo: false
+install:
+- gem install saddler saddler-reporter-github checkstyle_filter-git
 before_script:
-  # full clone @see http://qiita.com/azu/items/de4b5bc7b9c29480540e
-  - git fetch --unshallow
-  - git fetch origin master:refs/remotes/origin/master
-  # setup application
-  - sh ./setup_app.sh
-  # exec phpunit
-  - vendor/bin/behat --colors
-  # exec codeSniffer
-  - ./phpcs_check.sh
+- git fetch --unshallow
+- git fetch origin master:refs/remotes/origin/master
+- sh ./setup_app.sh
+#- vendor/bin/behat --colors
+- ./phpcs_check_travis.sh
+env:
+  global:
+    secure: PFYuV62VXDk8AoxL+cmxtS+Ckk8t7c78ZAs2UrmEItsZAkItXnEqZYKUYsja5rkX2IOyZgYt0uMSwN9MP5yOAB1X3/ryDJPox7Swfuz5KdV26+s1pLXMT+CnnqFEoanx0sWfgHD/Ikil98SyhM3UA2gvV77eBHsnDQzZhns1Fn8=
