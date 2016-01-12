@@ -4,6 +4,9 @@ php:
 - 5.5
 - 5.6
 sudo: false
+install:
+- gem install saddler saddler-reporter-github
+- gem install rails
 before_script:
 - git fetch --unshallow
 - git fetch origin master:refs/remotes/origin/master

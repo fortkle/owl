@@ -1,9 +1,5 @@
 #!/bin/bash
 
-echo "gemのインストールを開始します..."
-gem install --no-document saddler saddler-reporter-github
-
-
 echo "phpcsによるチェックを開始します..."
 # チェック対象のファイルがあるかチェック（ない場合は次のphpcsでエラーが出ないようにexitする）
 FILES=$(git diff --name-only --diff-filter=ACMR origin/master...HEAD | grep ".php")
@@ -15,7 +11,7 @@ if [ -z "${FILES}" ]; then
     exit 0
 fi
 
-echo "phpcsによるチェックを開始します..."
+echo "phpcsによるチェックを実行します..."
 # phpcsを実行する
 RESULT=$(git diff --name-only --diff-filter=ACMR origin/master...HEAD | grep ".php" | xargs vendor/bin/phpcs --standard=./phpcs.xml --report=checkstyle --report-file=phpcs.result.xml)
 if [ $? -eq 0 ]; then
