@@ -15,34 +15,7 @@ git diff --name-only --diff-filter=ACMR origin/master...HEAD | grep ".php" | xar
 set -e
 
 echo "********************"
-echo "* save outputs     *"
-echo "********************"
-
-cat phpcs.result.xml
-echo "ほげ"
-
-echo "********************"
-echo "* select reporter  *"
-echo "********************"
-
-if [ -z "${TRAVIS_PULL_REQUEST}" ]; then
-    # when not pull request
-    REPORTER=Saddler::Reporter::Github::CommitReviewComment
-else
-    REPORTER=Saddler::Reporter::Github::PullRequestReviewComment
-fi
-
-echo "********************"
 echo "* checkstyle       *"
 echo "********************"
-cat phpcs.result.xml \
-    | checkstyle_filter-git diff origin/master \
-    | saddler report --require saddler/reporter/github --reporter $REPORTER
+cat phpcs.result.xml | saddler report --require saddler/reporter/github --reporter Saddler::Reporter::Github::PullRequestReviewComment
 
-echo "********************"
-echo "* PMD              *"
-echo "********************"
-cat phpmd.result.xml \
-    | pmd_translate_checkstyle_format translate \
-    | checkstyle_filter-git diff origin/master \
-    | saddler report --require saddler/reporter/github --reporter $REPORTER
