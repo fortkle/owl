@@ -18,8 +18,6 @@ echo "********************"
 echo "* save outputs     *"
 echo "********************"
 
-LINT_RESULT_DIR="$CIRCLE_ARTIFACTS/lint"
-
 cat phpcs.result.xml
 echo "ほげ"
 
