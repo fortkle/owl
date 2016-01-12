@@ -12,6 +12,7 @@ before_script:
 - sh ./setup_app.sh
 #- vendor/bin/behat --colors
 - ./phpcs_check_travis.sh
+- cat phpcs.result.xml
 env:
   global:
     secure: PFYuV62VXDk8AoxL+cmxtS+Ckk8t7c78ZAs2UrmEItsZAkItXnEqZYKUYsja5rkX2IOyZgYt0uMSwN9MP5yOAB1X3/ryDJPox7Swfuz5KdV26+s1pLXMT+CnnqFEoanx0sWfgHD/Ikil98SyhM3UA2gvV77eBHsnDQzZhns1Fn8=
