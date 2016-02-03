@@ -16,6 +16,7 @@ This software is released under the MIT License, see LICENSE.txt.
 - Full Text Search
 - Item Publishing Settings (Public, Limited, Only Me)
 - Mail Notification
+- Export data as .md files (YAML front matter)
 
 ## Requirements
 
