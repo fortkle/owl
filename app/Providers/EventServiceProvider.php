@@ -38,5 +38,9 @@ class EventServiceProvider extends ServiceProvider
         if (config('notification.enabled')) {
             \Event::subscribe('\Owl\Handlers\Events\EmailNotification');
         }
+        // Slack通知イベントハンドラー
+        if (config('notification.slack.enabled') && !empty(config('notification.slack.webhook_url'))) {
+            \Event::subscribe('\Owl\Handlers\Events\SlackNotification');
+        }
     }
 }

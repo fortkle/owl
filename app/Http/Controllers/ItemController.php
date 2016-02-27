@@ -9,6 +9,7 @@ use Owl\Services\StockService;
 use Owl\Services\TemplateService;
 use Owl\Http\Requests\ItemStoreRequest;
 use Owl\Http\Requests\ItemUpdateRequest;
+use Owl\Events\Item\CreateEvent;
 use Owl\Events\Item\EditEvent;
 
 class ItemController extends Controller
@@ -48,7 +49,7 @@ class ItemController extends Controller
         return \View::make('items.create', compact('template', 'user_items'));
     }
 
-    public function store(ItemStoreRequest $request)
+    public function store(ItemStoreRequest $request, Dispatcher $event)
     {
         $user = $this->userService->getCurrentUser();
 
@@ -69,6 +70,13 @@ class ItemController extends Controller
             $item = $this->itemService->getById($item->id);
             $this->tagService->syncTags($item, $tag_ids);
         }
+
+        // fire CreateEvent
+        // TODO: do not create instance in controller method
+        $event->fire(new CreateEvent(
+            $object->open_item_id,
+            (int) $user->id
+        ));
 
         return \Redirect::route('items.show', [$item->open_item_id]);
     }
