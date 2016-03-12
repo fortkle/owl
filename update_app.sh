@@ -137,10 +137,6 @@ php composer.phar install
 # database migration
 php artisan migrate --seed --force
 
-# prepare files
-cp .env.example .env
-php artisan key:generate
-
 # run npm build
 npm i
 npm run build

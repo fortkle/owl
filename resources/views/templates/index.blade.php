@@ -24,7 +24,7 @@
             <th>タイトル</th>
             <th>操作</th>
         </tr>
-        @foreach ($templates as $template)
+        @forelse ($templates as $template)
         <tr>
             <td>{{{ $template->display_title }}}</a></td>
             <td>{{{ $template->title }}}</td>
@@ -35,7 +35,11 @@
                 {!! Form::close() !!}
             </td>
         </tr>
-        @endforeach
+        @empty
+        <tr>
+            <td colspan='3' class="text-center text-muted"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> 表示するテンプレートはありません。</td>
+        </tr>
+        @endforelse
     </table>
 @stop
 

@@ -23,9 +23,11 @@
     <h6><strong>最近の投稿</strong></h6>
     <div class="sidebar-user-items">
         <ul>
-        @foreach ($user_items as $item)
+        @forelse ($user_items as $item)
             <li><a href="{{ action('ItemController@show', $item->open_item_id) }}">{{{ $item->title }}}</a></li>
-        @endforeach
+        @empty
+            <li>最近の投稿はありません。</li>
+        @endforelse
         </ul>
     </div>
     <hr>

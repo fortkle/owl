@@ -4,11 +4,15 @@
     <div class="panel panel-default">
         <div class="panel-heading">テンプレートから作成 <a href="/templates">[編集]</a></div>
         <ul class="list-group">
-            @foreach ($templates as $template)
+            @forelse ($templates as $template)
             <li class="list-group-item">
                 <a href="/items/create?t={{$template->id}}">{{{$template->display_title}}}</a>
             </li>
-            @endforeach
+            @empty
+            <li class="list-group-item">
+              <a href="/templates/create"><span class="glyphicon glyphicon-plus"></span> 新しく作成する</a>
+            </li>
+            @endforelse
         </ul>
     </div>
 
