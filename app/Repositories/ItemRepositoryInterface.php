@@ -22,7 +22,7 @@ interface ItemRepositoryInterface
      * Get a item by open item id with comments.
      *
      * @param int $open_item_id
-     * @return Illuminate\Database\Eloquent\Model
+     * @return \stdClass|null
      */
     public function getByOpenItemIdWithComment($open_item_id);
 
@@ -107,8 +107,8 @@ interface ItemRepositoryInterface
 
     /**
      * get item tags array
-     * 
-     * @param object $item 
+     *
+     * @param object $item
      * @return array
      */
     public function getTagsToArray($item);

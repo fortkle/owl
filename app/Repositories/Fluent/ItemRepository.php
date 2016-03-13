@@ -46,12 +46,17 @@ class ItemRepository extends AbstractFluent implements ItemRepositoryInterface
      * Get a item by open item id with comments.
      *
      * @param int $open_item_id
-     * @return stdClass
+     * @return \stdClass|null
      */
     public function getByOpenItemIdWithComment($open_item_id)
     {
         // @FIXME
         $item = \DB::table('items')->where('open_item_id', $open_item_id)->first();
+
+        if (is_null($item)) {
+            return null;
+        }
+
         $item->user = \DB::table('users')->where('id', $item->user_id)->first();
         $comments = \DB::table('comments')->where('item_id', $item->id)->get();
         $i = 0;
@@ -371,8 +376,8 @@ class ItemRepository extends AbstractFluent implements ItemRepositoryInterface
 
     /**
      * get item tags array
-     * 
-     * @param object $item 
+     *
+     * @param object $item
      * @return array
      */
     public function getTagsToArray($item)
