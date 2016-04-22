@@ -42,18 +42,6 @@ class UserService extends Service
     }
 
     /**
-     * @return \stdclass | bool
-     */
-    public function getCurrentUser()
-    {
-        if (\Session::has('User')) {
-            $user = \Session::get('User');
-            return $user[0];
-        }
-        return false;
-    }
-
-    /**
      * @return bool
      */
     public function isOwner()

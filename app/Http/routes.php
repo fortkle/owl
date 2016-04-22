@@ -15,8 +15,8 @@
  * Not Logged In.
  */
 Route::group(['middleware' => 'notLogin'], function () {
-    Route::get('login', array('uses' => 'AuthController@login'));
-    Route::post('login', array('uses' => 'AuthController@attempt'));
+    Route::get('login', array('as' => 'login.index', 'uses' => 'AuthController@login'));
+    Route::post('login', array('as' => 'login.action', 'uses' => 'AuthController@attempt'));
     Route::get('signup', array('uses' => 'UserController@signup'));
     Route::post('signup', array('uses' => 'UserController@register'));
     Route::get('password/reminder', array('uses' => 'ReminderController@remind'));
@@ -50,7 +50,7 @@ Route::group(['middleware' => ['login','owner']], function () {
  */
 Route::group(['middleware' => 'login'], function () {
     // Basic
-    Route::get('/', array('uses' => 'IndexController@index'));
+    Route::get('/', array('as' => 'index', 'uses' => 'IndexController@index'));
     Route::get('logout', array('uses' => 'AuthController@logout'));
 
     // Items

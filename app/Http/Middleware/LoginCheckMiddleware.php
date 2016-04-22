@@ -1,15 +1,28 @@
 <?php namespace Owl\Http\Middleware;
 
-use Closure;
-use Owl\Services\UserService;
+/**
+ * @copyright (c) owl
+ */
 
+use Closure;
+use Illuminate\Auth\AuthManager;
+
+/**
+ * Class LoginCheckMiddleware
+ */
 class LoginCheckMiddleware
 {
-    protected $userService;
+    /** @var AuthManager */
+    protected $auth;
 
-    public function __construct(UserService $userService)
+    /**
+     * Create LoginCheckMiddleware.
+     *
+     * @param AuthManager  $auth
+     */
+    public function __construct(AuthManager $auth)
     {
-        $this->userService = $userService;
+        $this->auth = $auth;
     }
 
     /**
@@ -21,7 +34,7 @@ class LoginCheckMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (!$this->userService->getCurrentUser()) {
+        if ($this->auth->guest()) {
             return redirect('login');
         }
 

@@ -5,8 +5,8 @@
  */
 
 use Illuminate\View\View;
+use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Config\Repository as Config;
-use Owl\Services\UserService;
 use Owl\Services\MailNotifyService;
 
 /**
@@ -16,28 +16,28 @@ use Owl\Services\MailNotifyService;
  */
 class MailNotifySettingComposer
 {
+    /** @var AuthManager */
+    protected $auth;
+
     /** @var bool */
     protected $notifyEnable;
-
-    /** @var UserService */
-    protected $userService;
 
     /** @var MailNotifyService */
     protected $mailNotifyService;
 
     /**
+     * @param AuthManager        $auth
      * @param Config             $config
-     * @param UserService        $userService
      * @param MailNotifyService  $mailNotifyService
      */
     public function __construct(
+        AuthManager       $auth,
         Config            $config,
-        UserService       $userService,
         MailNotifyService $mailNotifyService
     ) {
+        $this->auth = $auth;
         $this->notifyEnable =
             $config->get('notification.enabled') && $config->get('mail.mail_enable');
-        $this->userService       = $userService;
         $this->mailNotifyService = $mailNotifyService;
     }
 
@@ -60,7 +60,7 @@ class MailNotifySettingComposer
     {
         if ($this->notifyEnable) {
             $notifyFlags = $this->mailNotifyService->getSettings(
-                $this->userService->getCurrentUser()->id
+                $this->auth->user()->getAuthIdentifier()
             );
             return view('user.edit._mail-notify', compact('notifyFlags'))->render();
         }

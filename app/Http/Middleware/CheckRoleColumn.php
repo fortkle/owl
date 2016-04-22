@@ -4,14 +4,13 @@
  * @copyright (c) owl
  */
 
-use Illuminate\Auth\AuthManager;
 use Closure;
-use Owl\Services\UserService;
+use Illuminate\Auth\AuthManager;
 
 /**
- * Class NotLoginCheckMiddleware
+ * Class CheckRoleColumn
  */
-class NotLoginCheckMiddleware
+class CheckRoleColumn
 {
     /** @var AuthManager */
     protected $auth;
@@ -25,7 +24,7 @@ class NotLoginCheckMiddleware
     }
 
     /**
-     * ログイン済みユーザはメインページへリダイレクト
+     * roleカラムのないログインユーザはリログイン処理を行う
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
@@ -33,8 +32,12 @@ class NotLoginCheckMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ($this->auth->check()) {
-            return redirect()->route('index');
+        // TODO: delete after release.
+        $loginUser = $this->auth->user();
+
+        if (!is_null($loginUser) && !isset($loginUser->role)) {
+            $user = $this->userService->getById($loginUser->id);
+            $this->auth->login($user);
         }
 
         return $next($request);
