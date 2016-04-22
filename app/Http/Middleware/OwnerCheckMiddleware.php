@@ -1,16 +1,27 @@
 <?php namespace Owl\Http\Middleware;
 
+/**
+ * @copyright (c) owl
+ */
+
 use Closure;
-use Owl\Services\UserService;
+use Illuminate\Auth\AuthManager;
 use Owl\Services\UserRoleService;
 
+/**
+ * Class OwnerCheckMiddleware
+ */
 class OwnerCheckMiddleware
 {
-    protected $userService;
+    /** @var AuthManager */
+    protected $auth;
 
-    public function __construct(UserService $userService)
+    /**
+     * @param AuthManager  $auth
+     */
+    public function __construct(AuthManager $auth)
     {
-        $this->userService = $userService;
+        $this->auth = $auth;
     }
 
     /**
@@ -22,10 +33,14 @@ class OwnerCheckMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $user = $this->userService->getCurrentUser();
+        // 未ログインユーザはlogin画面へリダイレクト
+        if ($this->auth->guest()) {
+            return redirect()->route('login.index');
+        }
 
-        if ($user->role != UserRoleService::ROLE_ID_OWNER) {
-            return redirect('/');
+        // オーナーでないログインユーザはメインページへリダイレクト
+        if ($this->auth->role() !== UserRoleService::ROLE_ID_OWNER) {
+            return redirect()->route('index');
         }
 
         return $next($request);

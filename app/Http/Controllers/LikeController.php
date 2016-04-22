@@ -1,23 +1,34 @@
 <?php namespace Owl\Http\Controllers;
 
+/**
+ * @copyright (c) owl
+ */
+
+use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Events\Dispatcher;
-use Owl\Services\UserService;
 use Owl\Services\ItemService;
 use Owl\Services\LikeService;
 use Owl\Events\Item\LikeEvent;
 
+/**
+ * Class LikeController
+ */
 class LikeController extends Controller
 {
-    protected $userService;
+    /** @var ItemService */
     protected $itemService;
+
+    /** @var LikeService */
     protected $likeService;
 
+    /**
+     * @param ItemService  $itemService
+     * @param LikeService  $likeService
+     */
     public function __construct(
-        UserService $userService,
         ItemService $itemService,
         LikeService $likeService
     ) {
-        $this->userService = $userService;
         $this->itemService = $itemService;
         $this->likeService = $likeService;
     }
@@ -35,25 +46,23 @@ class LikeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Dispatcher  $event
+     * @param AuthManager  $auth
+     * @param Dispatcher   $event
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Dispatcher $event)
+    public function store(AuthManager $auth, Dispatcher $event)
     {
-        $user = $this->userService->getCurrentUser();
+        $loginUserId = $auth->user()->getAuthIdentifier();
 
         $openItemId = \Input::get('open_item_id');
         $item = $this->itemService->getByOpenItemId($openItemId);
 
-        $this->likeService->firstOrCreate($user->id, $item->id);
+        $this->likeService->firstOrCreate($loginUserId, $item->id);
 
         // fire Like Event
         // TODO: do not generate instance in controller method
-        $event->fire(new LikeEvent(
-            $openItemId,
-            (int) $user->id
-        ));
+        $event->fire(new LikeEvent($openItemId, (int) $loginUserId));
 
         return \Response::json();
     }
@@ -62,14 +71,13 @@ class LikeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return Response
+     * @param int          $openItemId
+     * @param AuthManager  $auth
      */
-    public function destroy($openItemId)
+    public function destroy($openItemId, AuthManager $auth)
     {
-        $user = $this->userService->getCurrentUser();
         $item = $this->itemService->getByOpenItemId($openItemId);
 
-        $this->likeService->delete($user->id, $item->id);
+        $this->likeService->delete($auth->user()->getAuthIdentifier(), $item->id);
     }
 }

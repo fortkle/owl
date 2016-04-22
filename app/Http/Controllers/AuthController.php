@@ -1,22 +1,32 @@
 <?php namespace Owl\Http\Controllers;
 
-use Owl\Services\AuthService;
-use Owl\Services\UserService;
+/**
+ * @copyright (c) owl
+ */
+
+use Illuminate\Auth\AuthManager;
 use Owl\Http\Requests\AuthAttemptRequest;
 
+/**
+ * Class AuthController
+ */
 class AuthController extends Controller
 {
-    protected $authService;
-    protected $userService;
+    /** @var AuthManager */
+    protected $auth;
 
-    public function __construct(AuthService $authService, UserService $userService)
+    /**
+     * @param AuthManager  $auth
+     */
+    public function __construct(AuthManager $auth)
     {
-        $this->authService = $authService;
-        $this->userService = $userService;
+        $this->auth = $auth;
     }
 
     /*
      * ログイン画面
+     *
+     * @return \Illuminate\View\View
      */
     public function login()
     {
@@ -25,15 +35,19 @@ class AuthController extends Controller
 
     /*
      * ログイン認証
+     *
+     * @param AuthAttemptRequest  $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function attempt(AuthAttemptRequest $request)
     {
         $credentials = $request->only('username', 'password');
 
-        if ($this->authService->attempt($credentials, $request->has('remember'))) {
-            return \Redirect::to('/');
+        if ($user = $this->auth->attempt($credentials, $request->has('remember'))) {
+            return redirect()->route('index');
         } else {
-            return \Redirect::back()
+            return redirect()->back()
                 ->withErrors(array('warning' => 'ユーザ名又はパスワードが正しくありません'))
                 ->withInput();
         }
@@ -41,15 +55,13 @@ class AuthController extends Controller
 
     /*
      * ログアウト処理
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function logout()
     {
-        $this->authService->unsetUser();
-        $token = \Request::cookie('remember_token');
-        if ($token) {
-            $this->authService->deleteOldRememberToken($token);
-            $this->authService->deleteRememberTokenCookie();
-        }
-        return \Redirect::to('login');
+        $this->auth->logout();
+
+        return redirect()->route('login.index');
     }
 }

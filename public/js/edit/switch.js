@@ -18,8 +18,9 @@ $(function() {
   ];
 
   for(var i=0;i<targets.length;i++) {
-    $("[name='" + targets[i] + "']").bootstrapSwitch(
-      'onColor', 'success'
-    );
+    $("[name='" + targets[i] + "']").bootstrapSwitch({
+      'size' : 'small',
+      'onColor' : 'success'
+    });
   }
 });

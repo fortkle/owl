@@ -1,19 +1,31 @@
 <?php namespace Owl\Http\Middleware;
 
+/**
+ * @copyright (c) owl
+ */
+
+use Illuminate\Auth\AuthManager;
 use Closure;
 use Owl\Services\UserService;
 
+/**
+ * Class NotLoginCheckMiddleware
+ */
 class NotLoginCheckMiddleware
 {
-    protected $userService;
+    /** @var AuthManager */
+    protected $auth;
 
-    public function __construct(UserService $userService)
+    /**
+     * @param AuthManager  $auth
+     */
+    public function __construct(AuthManager $auth)
     {
-        $this->userService = $userService;
+        $this->auth = $auth;
     }
 
     /**
-     * Handle an incoming request.
+     * ログイン済みユーザはメインページへリダイレクト
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
@@ -21,8 +33,8 @@ class NotLoginCheckMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ($this->userService->getCurrentUser()) {
-            return redirect('/');
+        if ($this->auth->check()) {
+            return redirect()->route('index');
         }
 
         return $next($request);

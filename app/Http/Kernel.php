@@ -16,7 +16,7 @@ class Kernel extends HttpKernel
         'Illuminate\Session\Middleware\StartSession',
         'Illuminate\View\Middleware\ShareErrorsFromSession',
         'Owl\Http\Middleware\VerifyCsrfToken',
-        'Owl\Http\Middleware\AutoLoginMiddleware',
+        'Owl\Http\Middleware\CheckRoleColumn',
     ];
 
     /**

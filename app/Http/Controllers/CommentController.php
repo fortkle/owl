@@ -1,60 +1,78 @@
 <?php namespace Owl\Http\Controllers;
 
+/**
+ * @copyright (c) owl
+ */
+
+use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Events\Dispatcher;
-use Owl\Services\UserService;
 use Owl\Services\ItemService;
 use Owl\Services\CommentService;
 use Owl\Events\Item\CommentEvent;
 
+/**
+ * Class CommentController
+ */
 class CommentController extends Controller
 {
-    protected $userService;
+    /** @var ItemService */
     protected $itemService;
+
+    /** @var CommentService */
     protected $commentService;
+
+    /** @var int */
     private $status = 400;
 
+    /**
+     * @param ItemService     $itemService
+     * @param CommentService  $commentService
+     */
     public function __construct(
-        UserService $userService,
         ItemService $itemService,
         CommentService $commentService
     ) {
-        $this->userService = $userService;
         $this->itemService = $itemService;
         $this->commentService = $commentService;
     }
 
     /**
-     * @param Dispatcher  $event
+     * @param AuthManager  $auth
+     * @param Dispatcher   $event
      *
      * @return \Illuminate\View\View | string
      */
-    public function create(Dispatcher $event)
+    public function create(Dispatcher $event, AuthManager $auth)
     {
         $item = $this->itemService->getByOpenItemId(\Input::get('open_item_id'));
-        $user = $this->userService->getCurrentUser();
+        $user = $auth->user();
         if (preg_match("/^[\s　\t\r\n]*$/s", \Input::get('body') || !$user || !$item)) {
-            return "";
+            return '';
         }
 
-        $object = app('stdClass');
-        $object->item_id = $item->id;
-        $object->user_id = $user->id;
-        $object->body = \Input::get('body');
-        $object->username = $user->username;
-        $object->email = $user->email;
+        $object = (object) array(
+            'item_id'  => $item->id,
+            'user_id'  => $user->getAuthIdentifier(),
+            'body'     => \Input::get('body'),
+            'username' => $user->name(),
+            'email'    => $user->email(),
+        );
         $comment = $this->commentService->createComment($object);
 
         // fire event
         // TODO: do not create instance in controller method
         $event->fire(new CommentEvent(
             $item->open_item_id,
-            (int) $user->id,
+            (int) $user->getAuthIdentifier(),
             \Input::get('body')
         ));
 
-        return \View::make('comment.body', compact('comment'));
+        return view('comment.body', compact('comment'));
     }
 
+    /**
+     * @return \Illuminate\View\View|\Illuminate\Http\Response
+     */
     public function update()
     {
         if (!$comment = $this->commentService->getCommentById(\Input::get('id'))) {
@@ -67,6 +85,9 @@ class CommentController extends Controller
 
     }
 
+    /**
+     * @return \Illuminate\Http\Response
+     */
     public function destroy()
     {
         if ($comment = $this->commentService->getCommentById(\Input::get('id'))) {

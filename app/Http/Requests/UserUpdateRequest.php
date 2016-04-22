@@ -1,16 +1,23 @@
 <?php namespace Owl\Http\Requests;
 
-use Owl\Services\UserService;
+/**
+ * @copyright (c) owl
+ */
+
+use Illuminate\Auth\AuthManager;
 use Owl\Http\Requests\Request;
 
 class UserUpdateRequest extends Request
 {
+    /** @var AuthManager */
+    protected $auth;
 
-    protected $userService;
-
-    public function __construct(UserService $userService)
+    /**
+     * @param AuthManager  $auth
+     */
+    public function __construct(AuthManager $auth)
     {
-        $this->userService = $userService;
+        $this->auth = $auth;
     }
 
     /**
@@ -30,10 +37,11 @@ class UserUpdateRequest extends Request
      */
     public function rules()
     {
-        $loginUser = $this->userService->getCurrentUser();
+        $loginUserId = $this->auth->user()->getAuthIdentifier();
+
         return [
-            "username" => "required|alpha_num|reserved_word|max:30|unique:users,username,$loginUser->id",
-            "email" => "required|email|unique:users,email,$loginUser->id",
+            "username" => "required|alpha_num|reserved_word|max:30|unique:users,username,$loginUserId",
+            "email"    => "required|email|unique:users,email,$loginUserId",
         ];
     }
 }

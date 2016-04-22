@@ -1,34 +1,39 @@
 <?php namespace Owl\Http\ViewComposers;
 
-use Illuminate\Contracts\View\View;
-use Owl\Services\UserService;
+/**
+ * @copyright (c) owl
+ */
 
+use Illuminate\Auth\AuthManager;
+use Illuminate\Contracts\View\View;
+
+/**
+ * Class UserComposer
+ */
 class UserComposer
 {
-    protected $user;
+    /** @var AuthManager */
+    protected $auth;
 
     /**
      * Create a UserComposer
      *
-     * @param  UserService  $user
-     * @return void
+     * @param AuthManager  $auth
      */
-    public function __construct(UserService $user)
+    public function __construct(AuthManager $auth)
     {
-        $this->user = $user;
+        $this->auth = $auth;
     }
 
     /**
      * Share the user information to View
      *
-     * @param  View  $view
-     * @return void
+     * @param View  $view
      */
     public function compose(View $view)
     {
-        $currentUser = $this->user->getCurrentUser();
-        if (!empty($currentUser)) {
-            $view->with('User', $currentUser);
+        if ($loginUser = $this->auth->user()) {
+            $view->with('User', $loginUser);
         }
     }
 }

@@ -1,24 +1,30 @@
 <?php namespace Owl\Http\Middleware;
 
+/**
+ * @copyright (c) owl
+ */
+
 use Closure;
-use Owl\Services\AuthService;
-use Owl\Services\UserService;
+use Illuminate\Auth\AuthManager;
 
-class AutoLoginMiddleware
+/**
+ * Class CheckRoleColumn
+ */
+class CheckRoleColumn
 {
-    protected $userService;
-    protected $authService;
+    /** @var AuthManager */
+    protected $auth;
 
-    public function __construct(
-        UserService $userService,
-        AuthService $authService
-    ) {
-        $this->userService = $userService;
-        $this->authService = $authService;
+    /**
+     * @param AuthManager  $auth
+     */
+    public function __construct(AuthManager $auth)
+    {
+        $this->auth = $auth;
     }
 
     /**
-     * Handle an incoming request.
+     * roleカラムのないログインユーザはリログイン処理を行う
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
@@ -26,16 +32,12 @@ class AutoLoginMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $cookie = \Request::cookie('remember_token');
-        if ($cookie && !\Session::has('User')) {
-            $this->authService->autoLoginCheck();
-        }
-
         // TODO: delete after release.
-        $loginUser = $this->userService->getCurrentUser();
-        if (!empty($loginUser) && !isset($loginUser->role)) {
+        $loginUser = $this->auth->user();
+
+        if (!is_null($loginUser) && !isset($loginUser->role)) {
             $user = $this->userService->getById($loginUser->id);
-            $this->authService->setUser($user);
+            $this->auth->login($user);
         }
 
         return $next($request);
