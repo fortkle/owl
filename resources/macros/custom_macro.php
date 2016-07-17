@@ -41,28 +41,33 @@
     return $tag_lists;
 });
 
-\HTML::macro('show_tags', function($array)
+\HTML::macro('show_tags', function ($tags)
 {
-    $tag_lists = "";
-    foreach($array as $tag){
-        if($tag === end($array)) {
-            $tag_lists .= '<span class="tag-label"><a href="/tags/'. $tag["name"] .'">'. $tag["name"] .'</a></span>';
-            break;
-        }
-        $tag_lists .= '<span class="tag-label"><a href="/tags/'. $tag["name"] .'">'. $tag["name"] .'</a></span> ';
+    $tag_lists= [];
+
+    foreach ($tags as $tag) {
+        $tag_name     = $tag['name'];
+        $tag_page_url = route('tags.show', ['tags' => $tag_name]);
+
+        $tag_lists[] = '<span class="tag-label"><a href="'. $tag_page_url.'">'. e($tag_name) .'</a></span>';
     }
-    return $tag_lists;
+
+    return implode(' ', $tag_lists);
 });
 
-HTML::macro('show_users', function($array)
+HTML::macro('show_users', function($users)
 {
-    $user_lists = "";
-    foreach($array as $user){
-        $image = HTML::gravator($user["email"], 20);
-        $user_lists .= $image . ' <a href="/'. $user["username"] .'">'. $user["username"] .'</a>';
-        $user_lists .= ($user === end($array)) ? '' : '　';
+    $user_lists = [];
+
+    foreach ($users as $user) {
+        $image         = HTML::gravator($user["email"], 20);
+        $username      = $user['username'];
+        $user_page_url = route('user.profile', compact('username'));
+
+        $user_lists[] = $image . ' <a href="'. $user_page_url.'">'. e($username) .'</a>';
     }
-    return $user_lists;
+
+    return implode('　', $user_lists);
 });
 
 HTML::macro('markdown', function($str)

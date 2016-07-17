@@ -61,6 +61,11 @@ class SlackNotification
     public function onItemCreated(CreateEvent $event)
     {
         $item = $this->itemService->getByOpenItemId($event->getId());
+
+        if (!$this->itemShouldNotified($item)) {
+            return;
+        }
+
         $user = $this->userService->getById($event->getUserId());
         $this->slackUtils->postCreateMessage($item, $user);
     }
@@ -73,7 +78,34 @@ class SlackNotification
     public function onItemEdited(EditEvent $event)
     {
         $item = $this->itemService->getByOpenItemId($event->getId());
+
+        if (!$this->itemShouldNotified($item)) {
+            return;
+        }
+
         $user = $this->userService->getById($event->getUserId());
         $this->slackUtils->postEditMessage($item, $user);
+    }
+
+    /**
+     * 通知してよい記事かどうかチェック
+     *
+     * @param \stdClass  $item
+     *
+     * @return bool
+     */
+    protected function itemShouldNotified(\stdClass $item)
+    {
+        // 記事が非公開の場合は通知しない
+        if ($item->published === "0") {
+            return false;
+        }
+
+        // 記事が限定公開の場合は通知しない
+        if ($item->published === "1") {
+            return false;
+        }
+
+        return true;
     }
 }
