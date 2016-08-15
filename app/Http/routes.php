@@ -94,3 +94,4 @@ Route::group(['middleware' => 'login'], function () {
  * Dont Need Login. (must write after items/***)
  */
 Route::get('items/{items}', array('as' => 'items.show', 'uses' => 'ItemController@show'));
+Route::get('items/{items}', array('as' => 'items.showMd', 'uses' => 'ItemController@showMd'));

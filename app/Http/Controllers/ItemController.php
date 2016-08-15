@@ -90,12 +90,6 @@ class ItemController extends Controller
 
     public function show($openItemId)
     {
-        if (preg_match('/.md\z/', $openItemId)) {
-            $openItemId = str_replace('.md', '', $openItemId);
-            $item = $this->itemService->getByOpenItemIdWithComment($openItemId);
-
-            return \View::make('items.show-md', compact('item'));
-        }
         $item = $this->itemService->getByOpenItemIdWithComment($openItemId);
         
         if (empty($item)) {
@@ -125,6 +119,13 @@ class ItemController extends Controller
         return \View::make('items.show', compact('item', 'item_tags', 'user_items', 'stock', 'like', 'like_users', 'stocks', 'recent_stocks'));
     }
 
+    public function showMd($openItemId)
+    {
+        $openItemId = str_replace('.md', '', $openItemId);
+        $item = $this->itemService->getByOpenItemIdWithComment($openItemId);
+        return \View::make('items.show-md', compact('item'));
+    }    
+        
     public function edit($openItemId)
     {
         $user = $this->userService->getCurrentUser();
