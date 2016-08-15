@@ -1,0 +1,3 @@
+<pre>
+    {{{ $item->body }}}
+</pre>

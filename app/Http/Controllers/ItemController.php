@@ -90,7 +90,14 @@ class ItemController extends Controller
 
     public function show($openItemId)
     {
+        if (preg_match('/.md\z/', $openItemId)) {
+            $openItemId = str_replace('.md', '', $openItemId);
+            $item = $this->itemService->getByOpenItemIdWithComment($openItemId);
+
+            return \View::make('items.show-md', compact('item'));
+        }
         $item = $this->itemService->getByOpenItemIdWithComment($openItemId);
+        
         if (empty($item)) {
             \App::abort(404);
         }
