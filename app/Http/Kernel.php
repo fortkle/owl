@@ -28,5 +28,6 @@ class Kernel extends HttpKernel
         'login' => 'Owl\Http\Middleware\LoginCheckMiddleware',
         'notLogin' => 'Owl\Http\Middleware\NotLoginCheckMiddleware',
         'owner' => 'Owl\Http\Middleware\OwnerCheckMiddleware',
+        'items' => 'Owl\Http\Middleware\MdCheckMiddleware',
     ];
 }

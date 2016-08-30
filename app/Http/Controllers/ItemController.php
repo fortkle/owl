@@ -35,6 +35,7 @@ class ItemController extends Controller
         $this->likeService = $likeService;
         $this->stockService = $stockService;
         $this->templateService = $templateService;
+        $this->middleware('items');
     }
 
     public function create($templateId = null)
